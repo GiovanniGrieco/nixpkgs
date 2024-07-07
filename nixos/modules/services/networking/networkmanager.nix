@@ -570,6 +570,10 @@ in
 
     systemd.services.NetworkManager = {
       wantedBy = [ "network.target" ];
+      before = [
+        "network-online.target"
+        "NetworkManager-ensure-profiles.service"
+      ];
       restartTriggers = [ configFile ];
 
       aliases = [ "dbus-org.freedesktop.NetworkManager.service" ];
@@ -600,7 +604,7 @@ in
 
     systemd.services.NetworkManager-ensure-profiles = mkIf (cfg.ensureProfiles.profiles != { }) {
       description = "Ensure that NetworkManager declarative profiles are created";
-      wantedBy = [ "multi-user.target" ];
+      wantedBy = [ "network.target" ];
       before = [ "network-online.target" ];
       after = [ "NetworkManager.service" ];
       script = let
