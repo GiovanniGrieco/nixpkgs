@@ -432,13 +432,7 @@ in
 
   config = {
 
-    warnings = let
-      mkOneNetOnlineWarn = typeStr: name: def: lib.optional
-        (lib.elem "network-online.target" def.after && !(lib.elem "network-online.target" (def.wants ++ def.requires ++ def.bindsTo)))
-        "${name}.${typeStr} is ordered after 'network-online.target' but doesn't depend on it";
-      mkNetOnlineWarns = typeStr: defs: lib.concatLists (lib.mapAttrsToList (mkOneNetOnlineWarn typeStr) defs);
-      mkMountNetOnlineWarns = typeStr: defs: lib.concatLists (map (m: mkOneNetOnlineWarn typeStr m.what m) defs);
-    in concatLists (
+    warnings = concatLists (
       mapAttrsToList
         (name: service:
           let
@@ -459,30 +453,39 @@ in
             ]
         )
         cfg.services
-    )
-    ++ (mkNetOnlineWarns "target" cfg.targets)
-    ++ (mkNetOnlineWarns "service" cfg.services)
-    ++ (mkNetOnlineWarns "socket" cfg.sockets)
-    ++ (mkNetOnlineWarns "timer" cfg.timers)
-    ++ (mkNetOnlineWarns "path" cfg.paths)
-    ++ (mkMountNetOnlineWarns "mount" cfg.mounts)
-    ++ (mkMountNetOnlineWarns "automount" cfg.automounts)
-    ++ (mkNetOnlineWarns "slice" cfg.slices);
-
-    assertions = concatLists (
-      mapAttrsToList
-        (name: service:
-          map (message: {
-            assertion = false;
-            inherit message;
-          }) (concatLists [
-            (optional ((builtins.elem "network-interfaces.target" service.after) || (builtins.elem "network-interfaces.target" service.wants))
-              "Service '${name}.service' is using the deprecated target network-interfaces.target, which no longer exists. Using network.target is recommended instead."
-            )
-          ])
-        )
-        cfg.services
     );
+
+    assertions = let
+      mkOneAssert = typeStr: name: def: {
+        assertion = lib.elem "network-online.target" def.after -> lib.elem "network-online.target" (def.wants ++ def.requires ++ def.bindsTo);
+        message = "${name}.${typeStr} is ordered after 'network-online.target' but doesn't depend on it";
+      };
+      mkAsserts = typeStr: lib.mapAttrsToList (mkOneAssert typeStr);
+      mkMountAsserts = typeStr: map (m: mkOneAssert typeStr m.what m);
+    in mkMerge [
+      (concatLists (
+        mapAttrsToList
+          (name: service:
+            map (message: {
+              assertion = false;
+              inherit message;
+            }) (concatLists [
+              (optional ((builtins.elem "network-interfaces.target" service.after) || (builtins.elem "network-interfaces.target" service.wants))
+                "Service '${name}.service' is using the deprecated target network-interfaces.target, which no longer exists. Using network.target is recommended instead."
+              )
+            ])
+          )
+          cfg.services
+      ))
+      (mkAsserts "target" cfg.targets)
+      (mkAsserts "service" cfg.services)
+      (mkAsserts "socket" cfg.sockets)
+      (mkAsserts "timer" cfg.timers)
+      (mkAsserts "path" cfg.paths)
+      (mkMountAsserts "mount" cfg.mounts)
+      (mkMountAsserts "automount" cfg.automounts)
+      (mkAsserts "slice" cfg.slices)
+    ];
 
     system.build.units = cfg.units;
 
@@ -658,7 +661,6 @@ in
     systemd.services.systemd-udev-settle.restartIfChanged = false; # Causes long delays in nixos-rebuild
     systemd.targets.local-fs.unitConfig.X-StopOnReconfiguration = true;
     systemd.targets.remote-fs.unitConfig.X-StopOnReconfiguration = true;
-    systemd.targets.network-online.wantedBy = [ "multi-user.target" ];
     systemd.services.systemd-importd.environment = proxy_env;
     systemd.services.systemd-pstore.wantedBy = [ "sysinit.target" ]; # see #81138
 
