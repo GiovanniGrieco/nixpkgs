@@ -12225,8 +12225,6 @@ with pkgs;
 
   qprint = callPackage ../tools/text/qprint { };
 
-  qrcp = callPackage ../tools/networking/qrcp { };
-
   qrscan = callPackage ../tools/misc/qrscan { };
 
   qtikz = libsForQt5.callPackage ../applications/graphics/ktikz { };
@@ -20105,7 +20103,7 @@ with pkgs;
 
   # TODO(@Ericson2314): Build bionic libc from source
   bionic = if stdenv.hostPlatform.useAndroidPrebuilt
-    then pkgs."androidndkPkgs_${stdenv.hostPlatform.androidNdkVer}".libraries
+    then pkgs."androidndkPkgs_${stdenv.hostPlatform.androidNdkVersion}".libraries
     else callPackage ../os-specific/linux/bionic-prebuilt { };
 
   boolstuff = callPackage ../development/libraries/boolstuff { };
@@ -33001,7 +32999,7 @@ with pkgs;
     autoreconfHook = buildPackages.autoreconfHook269;
   };
 
-  musescore = libsForQt5.callPackage ../applications/audio/musescore { };
+  musescore = qt6Packages.callPackage ../applications/audio/musescore { };
 
   music-player = callPackage ../applications/audio/music-player { };
 
@@ -36056,7 +36054,7 @@ with pkgs;
   lndmanage = callPackage ../applications/blockchains/lndmanage { };
 
   monero-cli = callPackage ../applications/blockchains/monero-cli {
-    inherit (darwin.apple_sdk.frameworks) CoreData IOKit PCSC;
+    inherit (darwin.apple_sdk.frameworks) CoreData IOKit;
   };
 
   haven-cli = callPackage ../applications/blockchains/haven-cli {
