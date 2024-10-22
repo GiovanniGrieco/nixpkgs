@@ -11602,9 +11602,15 @@ with pkgs;
 
   perceptualdiff = callPackage ../tools/graphics/perceptualdiff { };
 
-  inherit (import ../servers/sql/percona-server pkgs) percona-server_lts percona-server_innovation;
+  inherit (import ../servers/sql/percona-server pkgs) percona-server_8_0 percona-server_8_4;
+  percona-server_lts = percona-server_8_0;
+  # temporarily, latest LTS and Innovation release are equal
+  percona-server_innovation = percona-server_8_4;
   percona-server = percona-server_lts;
-  inherit (import ../tools/backup/percona-xtrabackup pkgs) percona-xtrabackup_lts percona-xtrabackup_innovation;
+  inherit (import ../tools/backup/percona-xtrabackup pkgs) percona-xtrabackup_8_0 percona-xtrabackup_8_4;
+  percona-xtrabackup_lts = percona-xtrabackup_8_0;
+  # temporarily, latest LTS and Innovation release are equal
+  percona-xtrabackup_innovation = percona-xtrabackup_8_4;
   percona-xtrabackup = percona-xtrabackup_lts;
 
   pick = callPackage ../tools/misc/pick { };
@@ -29720,9 +29726,6 @@ with pkgs;
     boost = boost175;
   };
 
-
-  armcord = callPackage ../applications/networking/instant-messengers/armcord { };
-
   aumix = callPackage ../applications/audio/aumix {
     gtkGUI = false;
   };
@@ -30991,7 +30994,6 @@ with pkgs;
   firefox-unwrapped = firefoxPackages.firefox;
   firefox-beta-unwrapped = firefoxPackages.firefox-beta;
   firefox-devedition-unwrapped = firefoxPackages.firefox-devedition;
-  firefox-esr-115-unwrapped = firefoxPackages.firefox-esr-115;
   firefox-esr-128-unwrapped = firefoxPackages.firefox-esr-128;
   firefox-esr-unwrapped = firefoxPackages.firefox-esr-128;
 
@@ -31012,12 +31014,6 @@ with pkgs;
   firefox-mobile = callPackage ../applications/networking/browsers/firefox/mobile-config.nix { };
 
   firefox-esr-128 = wrapFirefox firefox-esr-128-unwrapped {
-    nameSuffix = "-esr";
-    desktopName = "Firefox ESR";
-    wmClass = "firefox-esr";
-    icon = "firefox-esr";
-  };
-  firefox-esr-115 = wrapFirefox firefox-esr-115-unwrapped {
     nameSuffix = "-esr";
     desktopName = "Firefox ESR";
     wmClass = "firefox-esr";
