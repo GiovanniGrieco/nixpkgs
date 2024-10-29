@@ -26595,10 +26595,6 @@ with pkgs;
 
   systemd-journal2gelf = callPackage ../tools/system/systemd-journal2gelf { };
 
-  tailscale = callPackage ../servers/tailscale {
-    buildGoModule = buildGo123Module;
-  };
-
   tailscale-systray = callPackage ../applications/misc/tailscale-systray { };
 
   tailspin = callPackage ../tools/misc/tailspin { };
@@ -29876,8 +29872,6 @@ with pkgs;
   bottles-unwrapped = callPackage ../applications/misc/bottles { };
 
   buzztrax = callPackage ../applications/audio/buzztrax { };
-
-  brave = callPackage ../applications/networking/browsers/brave { };
 
   break-time = callPackage ../applications/misc/break-time { };
 
