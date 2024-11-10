@@ -1007,6 +1007,10 @@ with pkgs;
 
   flare-signal = callPackage ../applications/networking/instant-messengers/flare-signal { };
 
+  forgejo = callPackage ../by-name/fo/forgejo/package.nix {
+    buildGoModule = buildGo123Module;
+  };
+
   prefer-remote-fetch = import ../build-support/prefer-remote-fetch;
 
   global-platform-pro = callPackage ../development/tools/global-platform-pro { };
@@ -5064,7 +5068,7 @@ with pkgs;
 
   element-desktop = callPackage ../applications/networking/instant-messengers/element/element-desktop.nix {
     inherit (darwin.apple_sdk.frameworks) Security AppKit CoreServices;
-    electron = electron_31;
+    electron = electron_32;
   };
   element-desktop-wayland = writeScriptBin "element-desktop" ''
     #!/bin/sh
@@ -10661,7 +10665,7 @@ with pkgs;
   mole = callPackage ../tools/networking/mole { };
 
   morgen = callPackage ../applications/office/morgen {
-    electron = electron_30;
+    electron = electron_32;
   };
 
   mosh = callPackage ../tools/networking/mosh { };
@@ -17910,10 +17914,6 @@ with pkgs;
 
   ansible-lint = callPackage ../tools/admin/ansible/lint.nix { };
 
-  antares = callPackage ../by-name/an/antares/package.nix {
-    electron = electron_30;
-  };
-
   antlr2 = callPackage ../development/tools/parsing/antlr/2.7.7.nix { };
   antlr3_4 = callPackage ../development/tools/parsing/antlr/3.4.nix { };
   antlr3_5 = callPackage ../development/tools/parsing/antlr/3.5.nix { };
@@ -17979,13 +17979,16 @@ with pkgs;
     electron_30-bin
     electron_31-bin
     electron_32-bin
+    electron_33-bin
     ;
 
   inherit (callPackages ../development/tools/electron/chromedriver { })
     electron-chromedriver_29
     electron-chromedriver_30
     electron-chromedriver_31
-    electron-chromedriver_32;
+    electron-chromedriver_32
+    electron-chromedriver_33
+    ;
 
   electron_24 = electron_24-bin;
   electron_27 = electron_27-bin;
@@ -17994,6 +17997,7 @@ with pkgs;
   electron_30 = if lib.meta.availableOn stdenv.hostPlatform electron-source.electron_30 then electron-source.electron_30 else electron_30-bin;
   electron_31 = if lib.meta.availableOn stdenv.hostPlatform electron-source.electron_31 then electron-source.electron_31 else electron_31-bin;
   electron_32 = if lib.meta.availableOn stdenv.hostPlatform electron-source.electron_32 then electron-source.electron_32 else electron_32-bin;
+  electron_33 = if lib.meta.availableOn stdenv.hostPlatform electron-source.electron_33 then electron-source.electron_33 else electron_33-bin;
   electron = electron_31;
   electron-bin = electron_31-bin;
 
@@ -26185,7 +26189,7 @@ with pkgs;
   azuredatastudio = callPackage ../applications/misc/azuredatastudio { };
 
   miniflux = callPackage ../servers/miniflux {
-    buildGoModule = buildGo122Module;
+    buildGoModule = buildGo123Module;
   };
 
   mir = callPackage ../servers/mir { };
@@ -33189,6 +33193,8 @@ with pkgs;
 
   scudcloud = callPackage ../applications/networking/instant-messengers/scudcloud { };
 
+  scx = recurseIntoAttrs (callPackage ../os-specific/linux/scx { });
+
   shod = callPackage ../applications/window-managers/shod { };
 
   shotcut = qt6Packages.callPackage ../applications/video/shotcut {
@@ -35367,9 +35373,9 @@ with pkgs;
 
   webcamoid = libsForQt5.callPackage ../applications/video/webcamoid { };
 
-  webcord = callPackage ../by-name/we/webcord/package.nix { electron = electron_30; };
+  webcord = callPackage ../by-name/we/webcord/package.nix { electron = electron_32; };
 
-  webcord-vencord = callPackage ../by-name/we/webcord-vencord/package.nix { electron = electron_30; };
+  webcord-vencord = callPackage ../by-name/we/webcord-vencord/package.nix { electron = electron_31; };
 
   webex = callPackage ../applications/networking/instant-messengers/webex { };
 
@@ -36621,7 +36627,10 @@ with pkgs;
     fltk = fltk-minimal;
   };
 
-  factorio = callPackage ../games/factorio { releaseType = "alpha"; };
+  factorio = callPackage ../games/factorio {
+    releaseType = "alpha";
+    versionsJson = ../games/factorio/versions-1.json;
+  };
 
   factorio-experimental = factorio.override { releaseType = "alpha"; experimental = true; };
 
@@ -36630,6 +36639,30 @@ with pkgs;
   factorio-headless-experimental = factorio.override { releaseType = "headless"; experimental = true; };
 
   factorio-demo = factorio.override { releaseType = "demo"; };
+
+  factorio_1 = factorio;
+
+  factorio_1-experimental = factorio-experimental;
+
+  factorio_1-headless = factorio-headless;
+
+  factorio_1-headless-experimental = factorio-headless-experimental;
+
+  factorio_1-demo = factorio-demo;
+
+  factorio_2 = factorio.override { versionsJson = ../games/factorio/versions.json; };
+
+  factorio_2-experimental = factorio-experimental.override { versionsJson = ../games/factorio/versions.json; };
+
+  factorio_2-headless = factorio-headless.override { versionsJson = ../games/factorio/versions.json; };
+
+  factorio_2-headless-experimental = factorio-headless-experimental.override { versionsJson = ../games/factorio/versions.json; };
+
+  # there is no factorio_2-demo
+
+  factorio-space-age = factorio_2.override { releaseType = "expansion"; };
+
+  factorio-space-age-experimental = factorio_2.override { releaseType = "expansion"; experimental = true; };
 
   factorio-mods = callPackage ../games/factorio/mods.nix { };
 
@@ -37121,8 +37154,6 @@ with pkgs;
   randtype = callPackage ../games/randtype { };
 
   raylib-games = callPackage ../games/raylib-games { };
-
-  raycast = callPackage ../os-specific/darwin/raycast { };
 
   redeclipse = callPackage ../games/redeclipse { };
 
