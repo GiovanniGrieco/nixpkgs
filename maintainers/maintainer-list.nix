@@ -3642,6 +3642,12 @@
     githubId = 136485;
     name = "Chad Jablonski";
   };
+  cjshearer = {
+    email = "cjshearer@live.com";
+    github = "cjshearer";
+    githubId = 7173077;
+    name = "Cody Shearer";
+  };
   ck3d = {
     email = "ck3d@gmx.de";
     github = "ck3d";
@@ -15389,6 +15395,13 @@
     githubId = 101753;
     keys = [ { fingerprint = "5D69 CF04 B7BC 2BC1 A567  9267 00BC F29B 3208 0700"; } ];
   };
+  phanirithvij = {
+    name = "Phani Rithvij";
+    email = "phanirithvij2000@gmail.com";
+    github = "phanirithvij";
+    githubId = 29627898;
+    matrix = "@phanirithvij:matrix.org";
+  };
   phdcybersec = {
     name = "Léo Lavaur";
     email = "phdcybersec@pm.me";
@@ -17354,6 +17367,12 @@
     github = "ryanccn";
     githubId = 70191398;
     name = "Ryan Cao";
+  };
+  ryand56 = {
+    email = "git@ryand.ca";
+    github = "ryand56";
+    githubId = 22267679;
+    name = "Ryan Omasta";
   };
   ryane = {
     email = "ryanesc@gmail.com";
